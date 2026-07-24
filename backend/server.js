@@ -5,20 +5,22 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Permite recibir datos en formato JSON
+app.use(cors());
 app.use(express.json());
 
-// Permite la comunicación con el frontend
-app.use(cors());
+// Importar rutas
+const tareasRoutes = require("./routes/tareas");
 
-// Ruta de prueba
+// Usar rutas
+app.use("/api/tareas", tareasRoutes);
+
+// Ruta principal
 app.get("/", (req, res) => {
     res.json({
-        mensaje: "API de tareas funcionando correctamente"
+        mensaje: "Servidor funcionando correctamente"
     });
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });
