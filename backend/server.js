@@ -2,19 +2,12 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-console.log("Variables de entorno:");
-console.log({
-    DB_HOST: process.env.DB_HOST,
-    DB_PORT: process.env.DB_PORT,
-    DB_NAME: process.env.DB_NAME,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD
-});
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Conexión PostgreSQL
+app.use(cors());
+app.use(express.json());
+
 const pool = require("./config/db");
 
 pool.query("SELECT NOW()", (err, res) => {
@@ -25,9 +18,6 @@ pool.query("SELECT NOW()", (err, res) => {
         console.log(res.rows[0]);
     }
 });
-
-app.use(cors());
-app.use(express.json());
 
 // Importar rutas
 const tareasRoutes = require("./routes/tareas");
