@@ -1,91 +1,341 @@
-body {
-
-    margin: 0;
-
-    font-family: Arial, sans-serif;
-
-    background: #f4f4f4;
-
-}
-
+/* Contenedor principal */
 
 .contenedor {
 
     width: 90%;
 
-    max-width: 700px;
+    max-width: 900px;
 
-    margin: 50px auto;
+    margin: 40px auto;
 
     background: white;
 
-    padding: 25px;
+    padding: 30px;
 
-    border-radius: 10px;
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.15);
 
 }
 
+
+/* Título */
 
 h1 {
 
     text-align: center;
 
+    color: #001f3f;
+
+    margin-bottom: 30px;
+
+    font-size: 32px;
+
 }
 
+
+
+/* Formulario */
 
 form {
 
-    display:flex;
+    display: flex;
 
-    gap:10px;
+    gap: 10px;
 
-    margin-bottom:25px;
+    margin-bottom: 25px;
 
 }
+
 
 
 input {
 
-    flex:1;
+    flex: 1;
 
-    padding:10px;
+    padding: 12px;
+
+    border:
+
+    1px solid #ccc;
+
+    border-radius: 8px;
+
+    font-size: 16px;
 
 }
 
+
+
+input:focus {
+
+    outline: none;
+
+    border-color: #004080;
+
+}
+
+
+
+/* Botones generales */
 
 button {
 
-    padding:10px;
+    padding: 10px 16px;
 
-    cursor:pointer;
+    border: none;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    background-color: #003366;
+
+    color: white;
+
+    font-size: 14px;
+
+    transition: 0.3s;
 
 }
 
+
+
+button:hover {
+
+    background-color: #00509e;
+
+}
+
+
+
+/* Resumen */
+
+.resumen {
+
+    display: flex;
+
+    justify-content: space-around;
+
+    background-color: #f1f5f9;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    margin-bottom: 25px;
+
+}
+
+
+
+.resumen p {
+
+    margin: 0;
+
+    color: #333;
+
+}
+
+
+
+/* Filtros */
+
+.filtros {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+
+}
+
+
+
+.filtros button {
+
+    background-color: #64748b;
+
+}
+
+
+
+.filtros button:hover {
+
+    background-color: #334155;
+
+}
+
+
+
+/* Lista de tareas */
+
+section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+
+
+/* Tarjeta de tarea */
 
 article {
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    gap:10px;
+    justify-content: space-between;
 
-    border-bottom:1px solid #ddd;
+    gap: 15px;
 
-    padding:10px 0;
+    padding: 18px;
+
+    border-radius: 10px;
+
+    background-color: #ffffff;
+
+    border:
+
+    1px solid #ddd;
+
+    box-shadow:
+
+    0 2px 8px rgba(0,0,0,0.08);
 
 }
 
+
+
+/* Texto tarea */
 
 article span {
 
-    flex:1;
+    flex: 1;
+
+    font-size: 17px;
+
+    color: #1e293b;
 
 }
 
 
+
+/* Tarea completada */
+
 .completada {
 
-    text-decoration:line-through;
+    text-decoration: line-through;
+
+    color: #64748b;
+
+}
+
+
+
+/* Botones de acciones */
+
+.acciones {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+
+.acciones button {
+
+    font-size: 13px;
+
+}
+
+
+
+/* Botón eliminar */
+
+.acciones button:last-child {
+
+    background-color: #b91c1c;
+
+}
+
+
+.acciones button:last-child:hover {
+
+    background-color: #dc2626;
+
+}
+
+
+
+/* Botón completar */
+
+.acciones button:first-child {
+
+    background-color: #047857;
+
+}
+
+
+.acciones button:first-child:hover {
+
+    background-color: #059669;
+
+}
+
+
+
+/* Responsive */
+
+@media(max-width:700px){
+
+
+    form {
+
+        flex-direction: column;
+
+    }
+
+
+
+    .resumen {
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        text-align: center;
+
+    }
+
+
+
+    article {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+
+
+    .acciones {
+
+        justify-content: center;
+
+    }
+
 
 }
