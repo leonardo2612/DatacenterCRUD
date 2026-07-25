@@ -28,10 +28,33 @@ jobs:
 
             cd ~/DatacenterCRUD
 
+            echo "Actualizando codigo..."
             git pull origin main
+
+
+            echo "Actualizando Backend..."
 
             cd backend
 
             npm install
 
             pm2 restart all
+
+
+            echo "Actualizando Frontend..."
+
+            cd ../frontend
+
+            npm install
+
+            npm run build
+
+
+            echo "Copiando frontend a Nginx..."
+
+            sudo rm -rf /var/www/html/*
+
+            sudo cp -r dist/* /var/www/html/
+
+
+            echo "Despliegue completado"
