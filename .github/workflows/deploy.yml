@@ -50,6 +50,11 @@ jobs:
             npm run build
 
 
+            echo "Buscando cambio en build..."
+
+            grep -r "CI/CD" dist || echo "No encontrado"
+
+
             echo "Copiando frontend a Nginx..."
 
             sudo rm -rf /var/www/html/*
