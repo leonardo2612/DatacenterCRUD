@@ -29,6 +29,9 @@ jobs:
             cd ~/DatacenterCRUD
 
             echo "Actualizando codigo..."
+
+            git fetch origin main
+
             git reset --hard origin/main
 
 
@@ -48,12 +51,6 @@ jobs:
             npm install
 
             npm run build
-
-
-            echo "Buscando cambio en build..."
-
-            grep -r "CI/CD" dist || echo "No encontrado"
-
 
             echo "Copiando frontend a Nginx..."
 
