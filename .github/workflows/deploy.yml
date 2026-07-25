@@ -43,7 +43,7 @@ jobs:
 
             echo "Actualizando Frontend..."
 
-            cd ../frontend
+            cd ~/DatacenterCRUD/frontend
 
             npm install
 
