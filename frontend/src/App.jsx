@@ -376,7 +376,7 @@ return(
 
 
 <h1>
-Gestor de Tareas
+Gestor de Tareas prototipado
 </h1>
 
 
