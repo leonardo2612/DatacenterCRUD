@@ -1,325 +1,794 @@
-import { useEffect, useState } from "react";
+import {useEffect,useState} from "react";
 import "./App.css";
 
-function App() {
-    const [tareas, setTareas] = useState([]);
-    const [titulo, setTitulo] = useState("");
-    const [filtro, setFiltro] = useState("todas");
-    const [idEditando, setIdEditando] = useState(null);
-    const [tituloEditado, setTituloEditado] = useState("");
 
-    // Ruta relativa para que funcione con Nginx y el VPS
-    const API_URL = "/api/tareas";
+function App(){
 
-    // Obtener todas las tareas
-    const obtenerTareas = async () => {
-        try {
-            const respuesta = await fetch(API_URL);
 
-            if (!respuesta.ok) {
-                throw new Error("No se pudieron obtener las tareas.");
-            }
+const API_URL="/api/tareas";
 
-            const datos = await respuesta.json();
-            setTareas(datos);
-        } catch (error) {
-            console.error("Error al obtener tareas:", error);
-        }
-    };
 
-    // Crear una tarea
-    const agregarTarea = async (evento) => {
-        evento.preventDefault();
+const [tareas,setTareas]=useState([]);
 
-        if (titulo.trim() === "") {
-            alert("Ingrese una tarea.");
-            return;
-        }
+const [titulo,setTitulo]=useState("");
 
-        try {
-            const respuesta = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    titulo: titulo.trim(),
-                }),
-            });
+const [prioridad,setPrioridad]=useState("media");
 
-            if (!respuesta.ok) {
-                throw new Error("No se pudo registrar la tarea.");
-            }
+const [fecha,setFecha]=useState("");
 
-            setTitulo("");
-            obtenerTareas();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+const [filtro,setFiltro]=useState("todas");
 
-    // Cambiar estado
-    const cambiarEstado = async (tarea) => {
-        try {
-            const respuesta = await fetch(`${API_URL}/${tarea.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    titulo: tarea.titulo,
-                    completada: !tarea.completada,
-                }),
-            });
 
-            if (!respuesta.ok) {
-                throw new Error("No se pudo actualizar la tarea.");
-            }
+// Estados para editar
 
-            obtenerTareas();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+const [idEditando,setIdEditando]=useState(null);
 
-    // Iniciar edición
-    const comenzarEdicion = (tarea) => {
-        setIdEditando(tarea.id);
-        setTituloEditado(tarea.titulo);
-    };
+const [tituloEditado,setTituloEditado]=useState("");
 
-    // Cancelar edición
-    const cancelarEdicion = () => {
-        setIdEditando(null);
-        setTituloEditado("");
-    };
 
-    // Guardar edición
-    const guardarEdicion = async (tarea) => {
-        if (tituloEditado.trim() === "") {
-            alert("El título no puede estar vacío.");
-            return;
-        }
 
-        try {
-            const respuesta = await fetch(`${API_URL}/${tarea.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    titulo: tituloEditado.trim(),
-                    completada: tarea.completada,
-                }),
-            });
 
-            if (!respuesta.ok) {
-                throw new Error("No se pudo editar la tarea.");
-            }
+// Obtener tareas
 
-            cancelarEdicion();
-            obtenerTareas();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+const obtenerTareas=async()=>{
 
-    // Eliminar tarea
-    const eliminarTarea = async (id) => {
-        const confirmar = window.confirm(
-            "¿Desea eliminar esta tarea?"
-        );
 
-        if (!confirmar) {
-            return;
-        }
+try{
 
-        try {
-            const respuesta = await fetch(`${API_URL}/${id}`, {
-                method: "DELETE",
-            });
 
-            if (!respuesta.ok) {
-                throw new Error("No se pudo eliminar la tarea.");
-            }
+const respuesta=
+await fetch(API_URL);
 
-            obtenerTareas();
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
-    // Filtros
-    const tareasFiltradas = tareas.filter((tarea) => {
-        if (filtro === "pendientes") {
-            return !tarea.completada;
-        }
+const datos=
+await respuesta.json();
 
-        if (filtro === "completadas") {
-            return tarea.completada;
-        }
 
-        return true;
-    });
+setTareas(datos);
 
-    // Contadores
-    const totalPendientes = tareas.filter(
-        (tarea) => !tarea.completada
-    ).length;
 
-    const totalCompletadas = tareas.filter(
-        (tarea) => tarea.completada
-    ).length;
 
-    useEffect(() => {
-        obtenerTareas();
-    }, []);
+}catch(error){
 
-    return (
-        <main className="contenedor">
+console.error(error);
 
-            <h1>Gestor de Tareas - Data Center</h1>
-
-            <form onSubmit={agregarTarea}>
-                <input
-                    type="text"
-                    placeholder="Ingrese una nueva tarea"
-                    value={titulo}
-                    onChange={(evento) =>
-                        setTitulo(evento.target.value)
-                    }
-                />
-
-                <button type="submit">
-                    Agregar tarea
-                </button>
-            </form>
-
-            <div className="resumen">
-                <p>
-                    <strong>Total de tareas:</strong> {tareas.length}
-                </p>
-
-                <p>
-                    <strong>Tareas pendientes:</strong> {totalPendientes}
-                </p>
-
-                <p>
-                    <strong>Tareas completadas:</strong> {totalCompletadas}
-                </p>
-            </div>
-
-            <div className="filtros">
-                <button
-                    className={filtro === "todas" ? "activo" : ""}
-                    onClick={() => setFiltro("todas")}
-                >
-                    Todas
-                </button>
-
-                <button
-                    className={filtro === "pendientes" ? "activo" : ""}
-                    onClick={() => setFiltro("pendientes")}
-                >
-                    Pendientes
-                </button>
-
-                <button
-                    className={filtro === "completadas" ? "activo" : ""}
-                    onClick={() => setFiltro("completadas")}
-                >
-                    Completadas
-                </button>
-            </div>
-
-            <section>
-
-                {tareasFiltradas.length === 0 ? (
-                    <p>No existen tareas para mostrar.</p>
-                ) : (
-                    tareasFiltradas.map((tarea) => (
-                        <article key={tarea.id}>
-
-                            {idEditando === tarea.id ? (
-                                <input
-                                    type="text"
-                                    value={tituloEditado}
-                                    onChange={(evento) =>
-                                        setTituloEditado(
-                                            evento.target.value
-                                        )
-                                    }
-                                />
-                            ) : (
-                                <span
-                                    className={
-                                        tarea.completada
-                                            ? "completada"
-                                            : ""
-                                    }
-                                >
-                                    {tarea.titulo}
-                                </span>
-                            )}
-
-                            <div className="acciones">
-
-                                {idEditando === tarea.id ? (
-                                    <>
-                                        <button
-                                            onClick={() =>
-                                                guardarEdicion(tarea)
-                                            }
-                                        >
-                                            Guardar
-                                        </button>
-
-                                        <button
-                                            onClick={cancelarEdicion}
-                                        >
-                                            Cancelar
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={() =>
-                                                cambiarEstado(tarea)
-                                            }
-                                        >
-                                            {tarea.completada
-                                                ? "Marcar pendiente"
-                                                : "Completar"}
-                                        </button>
-
-                                        <button
-                                            onClick={() =>
-                                                comenzarEdicion(tarea)
-                                            }
-                                        >
-                                            Editar
-                                        </button>
-
-                                        <button
-                                            onClick={() =>
-                                                eliminarTarea(tarea.id)
-                                            }
-                                        >
-                                            Eliminar
-                                        </button>
-                                    </>
-                                )}
-
-                            </div>
-
-                        </article>
-                    ))
-                )}
-
-            </section>
-
-        </main>
-    );
 }
+
+
+};
+
+
+
+
+// Crear tarea
+
+const agregarTarea=async(e)=>{
+
+
+e.preventDefault();
+
+
+
+if(titulo.trim()===""){
+
+alert("Ingrese una tarea");
+
+return;
+
+}
+
+
+
+await fetch(API_URL,{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+
+body:JSON.stringify({
+
+titulo,
+
+prioridad,
+
+fecha
+
+})
+
+
+});
+
+
+
+setTitulo("");
+
+setFecha("");
+
+setPrioridad("media");
+
+
+obtenerTareas();
+
+
+};
+
+
+
+
+
+
+// Cambiar estado
+
+const cambiarEstado=async(tarea)=>{
+
+
+await fetch(
+
+`${API_URL}/${tarea.id}`,
+
+{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+
+body:JSON.stringify({
+
+titulo:tarea.titulo,
+
+completada:!tarea.completada,
+
+prioridad:tarea.prioridad,
+
+fecha:tarea.fecha
+
+})
+
+
+}
+
+);
+
+
+
+obtenerTareas();
+
+
+};
+
+
+
+
+
+
+// Editar tarea
+
+
+const comenzarEdicion=(tarea)=>{
+
+
+setIdEditando(tarea.id);
+
+setTituloEditado(tarea.titulo);
+
+
+};
+
+
+
+
+
+const cancelarEdicion=()=>{
+
+
+setIdEditando(null);
+
+setTituloEditado("");
+
+
+};
+
+
+
+
+
+
+const guardarEdicion=async(tarea)=>{
+
+
+if(tituloEditado.trim()===""){
+
+alert("El título no puede estar vacío");
+
+return;
+
+}
+
+
+
+await fetch(
+
+`${API_URL}/${tarea.id}`,
+
+{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+
+body:JSON.stringify({
+
+titulo:tituloEditado,
+
+completada:tarea.completada,
+
+prioridad:tarea.prioridad,
+
+fecha:tarea.fecha
+
+})
+
+
+}
+
+);
+
+
+
+cancelarEdicion();
+
+
+obtenerTareas();
+
+
+};
+
+
+
+
+
+
+
+// Eliminar tarea
+
+
+const eliminarTarea=async(id)=>{
+
+
+await fetch(
+
+`${API_URL}/${id}`,
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+
+obtenerTareas();
+
+
+};
+
+
+
+
+
+
+
+
+// Filtros
+
+
+const tareasFiltradas=
+tareas.filter(t=>{
+
+
+if(filtro==="pendientes")
+
+return !t.completada;
+
+
+
+if(filtro==="completadas")
+
+return t.completada;
+
+
+
+return true;
+
+
+});
+
+
+
+
+
+
+
+
+// Estadisticas
+
+
+const total=tareas.length;
+
+
+const completas=
+tareas.filter(
+t=>t.completada
+).length;
+
+
+
+const porcentaje=
+total===0
+?
+0
+:
+Math.round(
+(completas/total)*100
+);
+
+
+
+
+
+
+useEffect(()=>{
+
+
+obtenerTareas();
+
+
+},[]);
+
+
+
+
+
+
+
+
+return(
+
+
+<main className="contenedor">
+
+
+
+<h1>
+Gestor de Tareas
+</h1>
+
+
+
+
+
+<form onSubmit={agregarTarea}>
+
+
+<input
+
+type="text"
+
+placeholder="Nueva tarea"
+
+value={titulo}
+
+onChange={
+e=>setTitulo(e.target.value)
+}
+
+/>
+
+
+
+
+
+<select
+
+value={prioridad}
+
+onChange={
+e=>setPrioridad(e.target.value)
+}
+
+>
+
+
+<option value="alta">
+🔴 Alta
+</option>
+
+
+<option value="media">
+🟡 Media
+</option>
+
+
+<option value="baja">
+🟢 Baja
+</option>
+
+
+</select>
+
+
+
+
+
+<input
+
+type="date"
+
+value={fecha}
+
+onChange={
+e=>setFecha(e.target.value)
+}
+
+/>
+
+
+
+
+
+<button>
+
+Agregar
+
+</button>
+
+
+</form>
+
+
+
+
+
+
+
+<div className="resumen">
+
+
+<p>
+
+Total:
+{total}
+
+</p>
+
+
+
+<p>
+
+Completadas:
+{completas}
+
+</p>
+
+
+
+<p>
+
+Progreso:
+{porcentaje}%
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+<div className="barra-contenedor">
+
+
+<div
+
+className="barra"
+
+style={{
+
+width:`${porcentaje}%`
+
+}}
+
+>
+
+{porcentaje}%
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="filtros">
+
+
+<button onClick={()=>setFiltro("todas")}>
+
+Todas
+
+</button>
+
+
+
+<button onClick={()=>setFiltro("pendientes")}>
+
+Pendientes
+
+</button>
+
+
+
+<button onClick={()=>setFiltro("completadas")}>
+
+Completadas
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<section>
+
+
+{
+
+tareasFiltradas.map(tarea=>(
+
+
+<article key={tarea.id}>
+
+
+
+
+<div>
+
+
+{
+
+idEditando===tarea.id
+
+?
+
+<input
+
+type="text"
+
+value={tituloEditado}
+
+onChange={
+e=>setTituloEditado(e.target.value)
+}
+
+/>
+
+:
+
+<h3>
+
+{tarea.titulo}
+
+</h3>
+
+
+}
+
+
+
+<p>
+
+Prioridad:
+
+<span className={
+
+`prioridad-${tarea.prioridad}`
+
+}>
+
+{tarea.prioridad}
+
+</span>
+
+
+</p>
+
+
+
+<p>
+
+📅 {tarea.fecha}
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div className="acciones">
+
+
+{
+
+idEditando===tarea.id
+
+?
+
+
+<>
+
+
+<button
+
+onClick={()=>guardarEdicion(tarea)}
+
+>
+
+Guardar
+
+</button>
+
+
+
+<button
+
+onClick={cancelarEdicion}
+
+>
+
+Cancelar
+
+</button>
+
+
+</>
+
+
+
+:
+
+
+<>
+
+
+<button
+
+onClick={()=>cambiarEstado(tarea)}
+
+>
+
+{
+
+tarea.completada
+
+?
+
+"Pendiente"
+
+:
+
+"Completar"
+
+}
+
+
+</button>
+
+
+
+
+<button
+
+onClick={()=>comenzarEdicion(tarea)}
+
+>
+
+Editar
+
+</button>
+
+
+
+
+
+<button
+
+onClick={()=>eliminarTarea(tarea.id)}
+
+>
+
+Eliminar
+
+</button>
+
+
+</>
+
+
+}
+
+
+
+</div>
+
+
+
+
+
+</article>
+
+
+
+))
+
+
+}
+
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+);
+
+
+}
+
+
 
 export default App;
