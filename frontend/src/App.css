@@ -340,59 +340,32 @@ article p{
 }
 
 
+/* ===========================
+   BOTONES DE ACCION
+=========================== */
 
-
-
-.acciones button:first-child{
-
-
+.btn-completar{
     background:#047857;
-
-
 }
 
-
-
-.acciones button:first-child:hover{
-
-
+.btn-completar:hover{
     background:#059669;
-
-
 }
 
-.acciones button:nth-child(2){
-
+.btn-editar{
     background:#2563eb;
-
 }
 
-
-
-.acciones button:nth-child(2):hover{
-
+.btn-editar:hover{
     background:#1d4ed8;
-
 }
 
-
-
-.acciones button:last-child{
-
-
+.btn-eliminar{
     background:#b91c1c;
-
-
 }
 
-
-
-.acciones button:last-child:hover{
-
-
+.btn-eliminar:hover{
     background:#dc2626;
-
-
 }
 
 
@@ -505,5 +478,59 @@ article p{
 
     }
 
+
+}
+
+/* ===========================
+   FILTRO POR PRIORIDAD
+=========================== */
+
+.filtro-prioridad{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:25px;
+
+}
+
+.filtro-prioridad label{
+
+    font-weight:bold;
+
+    color:#001f3f;
+
+}
+
+.filtro-prioridad select{
+
+    width:180px;
+
+}
+
+/* ===========================
+   TARJETA COMPLETADA
+=========================== */
+
+.tarea-completada{
+
+    background:#f1f5f9;
+
+    border:2px solid #16a34a;
+
+    transition:0.4s;
+
+}
+
+.tarea-completada h3{
+
+    text-decoration:line-through;
+
+    color:#64748b;
 
 }

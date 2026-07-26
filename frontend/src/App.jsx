@@ -18,6 +18,8 @@ const [fecha,setFecha]=useState("");
 
 const [filtro,setFiltro]=useState("todas");
 
+const [filtroPrioridad,setFiltroPrioridad]=useState("todas");
+
 
 // Estados para editar
 
@@ -298,24 +300,26 @@ obtenerTareas();
 // Filtros
 
 
-const tareasFiltradas=
-tareas.filter(t=>{
+const tareasFiltradas = tareas.filter((t) => {
 
+    // Filtro por estado
+    if (filtro === "pendientes" && t.completada) {
+        return false;
+    }
 
-if(filtro==="pendientes")
+    if (filtro === "completadas" && !t.completada) {
+        return false;
+    }
 
-return !t.completada;
+    // Filtro por prioridad
+    if (
+        filtroPrioridad !== "todas" &&
+        t.prioridad !== filtroPrioridad
+    ) {
+        return false;
+    }
 
-
-
-if(filtro==="completadas")
-
-return t.completada;
-
-
-
-return true;
-
+    return true;
 
 });
 
@@ -536,41 +540,48 @@ width:`${porcentaje}%`
 
 <div className="filtros">
 
+    <button onClick={()=>setFiltro("todas")}>
+        Todas
+    </button>
 
-<button onClick={()=>setFiltro("todas")}>
+    <button onClick={()=>setFiltro("pendientes")}>
+        Pendientes
+    </button>
 
-Todas
-
-</button>
-
-
-
-<button onClick={()=>setFiltro("pendientes")}>
-
-Pendientes
-
-</button>
-
-
-
-<button onClick={()=>setFiltro("completadas")}>
-
-Completadas
-
-</button>
-
-
+    <button onClick={()=>setFiltro("completadas")}>
+        Completadas
+    </button>
 
 </div>
 
+<div className="filtro-prioridad">
 
+    <label>Prioridad:</label>
 
+    <select
+        value={filtroPrioridad}
+        onChange={(e)=>setFiltroPrioridad(e.target.value)}
+    >
 
+        <option value="todas">
+            Todas
+        </option>
 
+        <option value="alta">
+            🔴 Alta
+        </option>
 
+        <option value="media">
+            🟡 Media
+        </option>
 
+        <option value="baja">
+            🟢 Baja
+        </option>
 
+    </select>
 
+</div>
 
 <section>
 
@@ -580,8 +591,16 @@ Completadas
 tareasFiltradas.map(tarea=>(
 
 
-<article key={tarea.id}>
-
+<article
+    key={tarea.id}
+    className={
+        tarea.completada
+        ?
+        "tarea-completada"
+        :
+        ""
+    }
+>
 
 
 
@@ -609,6 +628,8 @@ e=>setTituloEditado(e.target.value)
 :
 
 <h3>
+
+{tarea.completada && "❌ "}
 
 {tarea.titulo}
 
@@ -640,7 +661,13 @@ Prioridad:
 
 <p>
 
-📅 {tarea.fecha}
+📅 {
+
+new Date(tarea.fecha)
+
+.toLocaleDateString("es-EC")
+
+}
 
 </p>
 
@@ -701,39 +728,26 @@ Cancelar
 
 
 <button
-
-onClick={()=>cambiarEstado(tarea)}
-
+    className="btn-completar"
+    onClick={()=>cambiarEstado(tarea)}
 >
-
-{
-
-tarea.completada
-
-?
-
-"Pendiente"
-
-:
-
-"Completar"
-
-}
-
-
+    {
+        tarea.completada
+        ?
+        "Pendiente"
+        :
+        "Completar"
+    }
 </button>
 
 
 
 
 <button
-
-onClick={()=>comenzarEdicion(tarea)}
-
+    className="btn-editar"
+    onClick={()=>comenzarEdicion(tarea)}
 >
-
-Editar
-
+    Editar
 </button>
 
 
@@ -741,13 +755,10 @@ Editar
 
 
 <button
-
-onClick={()=>eliminarTarea(tarea.id)}
-
+    className="btn-eliminar"
+    onClick={()=>eliminarTarea(tarea.id)}
 >
-
-Eliminar
-
+    Eliminar
 </button>
 
 
