@@ -15,7 +15,13 @@ router.get("/", async (req,res)=>{
             `
             SELECT *
             FROM tareas
-            ORDER BY id ASC
+            ORDER BY
+            CASE prioridad
+                WHEN 'alta' THEN 1
+                WHEN 'media' THEN 2
+                WHEN 'baja' THEN 3
+            END,
+            id ASC
             `
         );
 
