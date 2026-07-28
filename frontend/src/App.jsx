@@ -380,7 +380,7 @@ return(
 
 
 <h1>
-Gestor de Tareas
+Gestor de bombos
 </h1>
 
 
