@@ -409,30 +409,27 @@ e=>setTitulo(e.target.value)
 
 
 <select
-
 value={prioridad}
-
 onChange={
 e=>setPrioridad(e.target.value)
 }
-
 >
 
+<option value="nueva">
+🔵 Nueva
+</option>
 
 <option value="alta">
 🔴 Alta
 </option>
 
-
 <option value="media">
 🟡 Media
 </option>
 
-
 <option value="baja">
 🟢 Baja
 </option>
-
 
 </select>
 
