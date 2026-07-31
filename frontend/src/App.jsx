@@ -561,20 +561,24 @@ width:`${porcentaje}%`
     >
 
         <option value="todas">
-            Todas
-        </option>
+    Todas
+                </option>
 
-        <option value="alta">
-            🔴 Alta
-        </option>
+                <option value="nueva">
+                    🔵 Nueva
+                </option>
 
-        <option value="media">
-            🟡 Media
-        </option>
+                <option value="alta">
+                    🔴 Alta
+                </option>
 
-        <option value="baja">
-            🟢 Baja
-        </option>
+                <option value="media">
+                    🟡 Media
+                </option>
+
+                <option value="baja">
+                    🟢 Baja
+                </option>
 
     </select>
 
